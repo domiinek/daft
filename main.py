@@ -7,6 +7,6 @@ def hello_world():
     return {"message": "Hello World during the coronavirus pandemic!"}
 
 
-@app.api_route(path="/method", method=["GET", "POST", "PUT", "DELETE"])
+@app.get(path="/method", method=["GET", "POST", "PUT", "DELETE"])
 def write_requests(requests:Request):
 	return{"method": requests.method}
