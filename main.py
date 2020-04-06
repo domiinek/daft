@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Response, status
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
@@ -7,6 +7,6 @@ app = FastAPI()
 def hello_world():
     return {"message": "Hello World during the coronavirus pandemic!"}
 
-@app.api_route(path="/method", methods=["GET", "POST", "PUT", "DELETE"])
+@app.api_route(path="/method", methods=["GET", "POST", "PUT","DELETE"])
 def our_requests(request: Request):
-    return{"method": request.method}
+    return{"method": request.methods}
