@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from typing import Dict
+from fastapi import FastAPI, Request
 
 app = FastAPI()
 
