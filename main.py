@@ -8,5 +8,5 @@ def hello_world():
 
 
 @app.api_route(path="/method", method=["GET", "POST", "PUT", "DELETE"])
-def requests():
+def write_requests(requests:Request):
 	return{"method": requests.method}
