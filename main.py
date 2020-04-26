@@ -8,17 +8,6 @@ app = FastAPI()
 security = HTTPBasic()
 
 
-def username(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_login = secrets.compare_digest(credentials.login, "trudnY")
-    correct_password = secrets.compare_digest(credentials.password, "PaC13Nt")
-
-    if not (correct_login and correct_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            
-        )
-    return credentials.login
-
 
 @app.get("/")
 def read_root():
@@ -29,15 +18,14 @@ def welcoming():
     return {"message": "Some stupid message"}
 
 @app.post("/login")
-def new_login(new_user = Depends(username)):
-    
-    session_token = sha256(bytes(f"{login}{password}", encoding='utf8')).hexdigest()
-    app.tokens_list.append(session_token)
-    
+def login_auth(response: Response, credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username  = secrets.compare_digest(credentials.username, "trudnY")
+    correct_password  = secrets.compare_digest(credentials.password, "PaC13Nt")
+    if not (correct_username and correct_password ):
+        raise HTTPException(status_code=401,  detail="Incorrect email or password", headers={"WWW-Authenticate": "Basic"})
+    session_token = sha256(
+        bytes(f"{credentials.username}{credentials.password}{app.secret_key}", encoding='utf8')).hexdigest()
+    app.session_tokens.append(session_token)
     response.set_cookie(key="session_token", value=session_token)
-    
-        
-    response = RedirectResponse(url = "/welcome")
+    response.headers["Location"] = "/welcome"
     response.status_code = status.HTTP_302_FOUND
-    
-    return response
