@@ -33,7 +33,7 @@ def read_root():
 @app.get("/welcome")
 def welcome(request: Request, session_token: str =Cookie(None)):
 	if session_token in app.sesions:
-		return templates.TemplateResponse("welcome.html", {"request":request, "user" : app.sesions[session_token]})
+		return templates.TemplateResponse("welcome.html", {"id": greeting, "my_string": "Hello, {{ user }}!"})
 	else:
 		return HTTPException(401)
 
