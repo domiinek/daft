@@ -35,7 +35,7 @@ def welcome(request: Request, session_token: str =Cookie(None)):
 	if session_token in app.sesions:
 		return templates.TemplateResponse("welcome.html", {"id": greeting, "my_string": "Hello, {{ user }}!"})
 	else:
-		return HTTPException(401)
+		return Response(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
 @app.post("/login")
