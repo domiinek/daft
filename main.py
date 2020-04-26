@@ -1,17 +1,23 @@
-from typing import Dict
-
-from fastapi import FastAPI, Request, Response, status
-from pydantic import BaseModel
-
-
-class Patient(BaseModel):
-    name: str
-    surename: str
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi import FastAPI, Response, status
+from fastapi import Depends, Cookie, HTTPException
+import secrets
 
 
 app = FastAPI()
-app.counter: int = 0
-app.storage: Dict[int, Patient] = {}
+security = HTTPBasic()
+
+
+def username(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_login = secrets.compare_digest(credentials.login, "trudnY")
+    correct_password = secrets.compare_digest(credentials.password, "PaC13Nt")
+
+    if not (correct_login and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            
+        )
+    return credentials.login
 
 
 @app.get("/")
@@ -22,21 +28,16 @@ def read_root():
 def welcoming():
     return {"message": "Some stupid message"}
 
-@app.api_route(path="/method", methods=["GET", "POST", "DELETE", "PUT", "OPTIONS"])
-def read_request(request: Request):
-    return {"method": request.method}
-
-
-@app.post("/patient")
-def show_data(patient: Patient):
-    resp = {"id": app.counter, "patient": patient}
-    app.storage[app.counter] = patient
-    app.counter += 1
-    return resp
-
-
-@app.get("/patient/{pk}")
-def show_patient(pk: int):
-    if pk in app.storage:
-        return app.storage.get(pk)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+@app.post("/login")
+def new_login(new_user = Depends(username)):
+    
+    session_token = sha256(bytes(f"{login}{password}", encoding='utf8')).hexdigest()
+    app.tokens_list.append(session_token)
+    
+    response.set_cookie(key="session_token", value=session_token)
+    
+        
+    response = RedirectResponse(url = "/welcome")
+    response.status_code = status.HTTP_302_FOUND
+    
+    return response
