@@ -6,6 +6,8 @@ import secrets
 
 app = FastAPI()
 security = HTTPBasic()
+app.session_tokens = []
+app.secret_key = "my secret key"
 
 
 
