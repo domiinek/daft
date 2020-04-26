@@ -3,6 +3,8 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi import FastAPI, Response, status
 from fastapi import Depends, Cookie, HTTPException
 from hashlib import sha256
+from fastapi.templating import Jinja2Templates
+
 
 import secrets
 from typing import Dict
@@ -15,7 +17,7 @@ class Patient(BaseModel):
     name: str
     surename: str
 
-
+templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 security = HTTPBasic()
 app.session_tokens = []
