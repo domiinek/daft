@@ -26,7 +26,7 @@ def read_root():
     return {"message": "Hello World during the coronavirus pandemic!"}
 
 @app.get("/welcome")
-def welcome(request: Request, session_token: str = set_cookie(None)):
+def welcome(request: Request, session_token: str = Cookie(None)):
     if session_token not in app.session_tokens:
         return Response(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
