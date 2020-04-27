@@ -28,7 +28,7 @@ def read_root():
 @app.get("/welcome")
 def welcome(request: Request, session_token: str = Cookie(None)):
     if session_token not in app.session_tokens:
-        return Response(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise Response(status_code=status.HTTP_401_UNAUTHORIZED)
     else:
         return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
 
@@ -44,11 +44,4 @@ def login_auth(response: Response, credentials: HTTPBasicCredentials = Depends(s
     response.set_cookie(key="session_token", value=session_token)
     response.headers["Location"] = "/welcome"
     response.status_code = status.HTTP_302_FOUND
-
-
-
-
-@app.api_route(path="/method", methods=["GET", "POST", "DELETE", "PUT", "OPTIONS"])
-def read_request(request: Request):
-    return {"method": request.method}
 
