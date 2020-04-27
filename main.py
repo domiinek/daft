@@ -51,7 +51,7 @@ def login_auth(response: Response, credentials: HTTPBasicCredentials = Depends(s
     response.status_code = status.HTTP_302_FOUND
 
 @app.post("/logout")
-def log_out(request: Request, session_token: str = Cookie(None)):
+def log_out(response: Response, request: Request, session_token: str = Cookie(None)):
     if session_token in app.session_tokens:
         app.session_tokens.remove(session_token)
         response.headers["Location"]="/"
