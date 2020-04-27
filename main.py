@@ -1,29 +1,24 @@
 from starlette.responses import RedirectResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, Response, Request, status
 from fastapi import Depends, Cookie, HTTPException
 from hashlib import sha256
-from jinja2 import Template
+from fastapi.templating import Jinja2Templates
 
 
 import secrets
 from typing import Dict
 
-from fastapi import FastAPI, Request, Response, status
 from pydantic import BaseModel
 
 
-class Patient(BaseModel):
-    name: str
-    surename: str
 
 templates = Jinja2Templates(directory="templates")
 app = FastAPI()
 security = HTTPBasic()
 app.session_tokens = []
 app.secret_key = "my secret key"
-app.counter: int = 0
-app.storage: Dict[int, Patient] = {}
+
 
 
 @app.get("/")
