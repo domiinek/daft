@@ -28,7 +28,7 @@ def read_root():
 @app.get("/welcome")
 def welcome(request: Request, session_token: str = set_cookie(None)):
     if session_token not in app.session_tokens:
-        raise HTTPException(status_code=401,  detail="login required", headers={"WWW-Authenticate": "Basic"})
+        raise HTTPException(status_code=401,  detail="login required")
     else:
         return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
 
