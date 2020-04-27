@@ -52,17 +52,3 @@ def login_auth(response: Response, credentials: HTTPBasicCredentials = Depends(s
 def read_request(request: Request):
     return {"method": request.method}
 
-
-@app.post("/patient")
-def show_data(patient: Patient):
-    resp = {"id": app.counter, "patient": patient}
-    app.storage[app.counter] = patient
-    app.counter += 1
-    return resp
-
-
-@app.get("/patient/{pk}")
-def show_patient(pk: int):
-    if pk in app.storage:
-        return app.storage.get(pk)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
