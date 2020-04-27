@@ -26,9 +26,9 @@ def read_root():
     return {"message": "Hello World during the coronavirus pandemic!"}
 
 @app.get("/welcome")
-def welcome(request: Request, session_token: str = Cookie(None)):
+def welcome(request: Request, session_token: str = set_cookie(None)):
     if session_token not in app.session_tokens:
-        raise Response(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise HTTPException(status_code=401,  detail="login required", headers={"WWW-Authenticate": "Basic"})
     else:
         return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
 
@@ -45,3 +45,9 @@ def login_auth(response: Response, credentials: HTTPBasicCredentials = Depends(s
     response.headers["Location"] = "/welcome"
     response.status_code = status.HTTP_302_FOUND
 
+
+
+
+@app.api_route(path="/method", methods=["GET", "POST", "DELETE", "PUT", "OPTIONS"])
+def read_request(request: Request):
+    return {"method": request.method}
