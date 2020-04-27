@@ -3,7 +3,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi import FastAPI, Response, status
 from fastapi import Depends, Cookie, HTTPException
 from hashlib import sha256
-from fastapi.templating import Jinja2Templates
+from jinja2 import Template
 
 
 import secrets
@@ -32,7 +32,7 @@ def read_root():
 
 @app.get("/welcome")
 def welcome(request: Request, session_token: str =Cookie(None)):
-	if session_token in app.sesions:
+	if session_token in app.sessions_tokens:
 		return templates.TemplateResponse("welcome.html", {"id": greeting, "my_string": "Hello, {{ user }}!"})
 	else:
 		return Response(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -50,6 +50,7 @@ def login_auth(response: Response, credentials: HTTPBasicCredentials = Depends(s
     response.set_cookie(key="session_token", value=session_token)
     response.headers["Location"] = "/welcome"
     response.status_code = status.HTTP_302_FOUND
+
 
 
 
