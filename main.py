@@ -53,7 +53,7 @@ def login_auth(response: Response, credentials: HTTPBasicCredentials = Depends(s
 @app.post("/logout")
 def log_out(request: Request, session_token: str = Cookie(None)):
     if session_token in app.session_tokens:
-
+        app.session_tokens.remove(session_token)
         response.headers["Location"]="/"
     raise HTTPException(status_code=401,  detail="login required")
 
@@ -64,14 +64,16 @@ def read_request(request: Request):
 
 @app.post("/patient")
 def show_data(patient: Patient):
-    resp = {"id": app.counter, "patient": patient}
-    app.storage[app.counter] = patient
-    app.counter += 1
-    return resp
+    if session_token in app.session_tokens:
+        resp = {"id": app.counter, "patient": patient}
+        app.storage[app.counter] = patient
+        app.counter += 1
+        return resp
 
 
 @app.get("/patient/{pk}")
 def show_patient(pk: int):
-    if pk in app.storage:
-        return app.storage.get(pk)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    if session_token in app.session_tokens:
+        if pk in app.storage:
+            return app.storage.get(pk)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
