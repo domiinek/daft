@@ -28,7 +28,7 @@ def read_root():
 @app.get("/welcome")
 def welcome(request: Request, session_token: str = Cookie(None)):
     if session_token not in app.session_tokens:
-        return status.HTTP_401_UNAUTHORIZED
+        return Response(status_code=status.HTTP_401_UNAUTHORIZED)
     return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
 
 @app.post("/login")
