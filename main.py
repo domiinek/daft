@@ -32,11 +32,9 @@ def read_root():
 
 @app.get("/welcome")
 def welcome(request: Request, session_token: str = Cookie(None)):
-	if session_token not in app.session_tokens:
-        raise HTTPException(status_code = 401, detail = "login required")
-
-	return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
-	
+    if session_token in app.session_tokens:
+        return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
+	raise HTTPException(status_code = 401, detail = "login required")
 
 
 @app.post("/login")
