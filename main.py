@@ -31,11 +31,12 @@ def read_root():
     return {"message": "Hello World during the coronavirus pandemic!"}
 
 @app.get("/welcome")
-def welcome(request: Request, session_token: str =Cookie(None)):
-	if session_token in app.sessions_tokens:
-		return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
-    else:
-		return Response(status_code = status.HTTP_401_UNAUTHORIZED)
+def welcome(request: Request, session_token: str = Cookie(None)):
+	if session_token not in app.session_tokens:
+        raise HTTPException(status_code = 401, detail = "login required")
+
+	return templates.TemplateResponse("welcome.html", {"request": request, "user": "trudnY"})
+	
 
 
 @app.post("/login")
